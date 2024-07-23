@@ -1,4 +1,5 @@
-import type { Dispatch,SetStateAction } from "react"
+import type { Dispatch } from "react"
+import { OrderActions } from "../reducers/order-reducer"
 const tipOptions = [
     {
         id: 'tip-10',
@@ -16,11 +17,11 @@ const tipOptions = [
         label: '50%'
     },
 ]
-type TipPorcentajeFormProps={
-    setTip: Dispatch<SetStateAction<number>>
-    tip:number
+type TipPorcentajeFormProps = {
+    dispatch: Dispatch<OrderActions>
+    tip: number
 }
-export default function TipPorcentajeForm({setTip,tip}:TipPorcentajeFormProps) {
+export default function TipPorcentajeForm({ dispatch, tip }: TipPorcentajeFormProps) {
     return (
         <div>
             <h3 className="font-bold text-2xl">Propina:</h3>
@@ -30,12 +31,12 @@ export default function TipPorcentajeForm({setTip,tip}:TipPorcentajeFormProps) {
                         <div key={tipOption.id} className=" flex gap-2">
                             <label htmlFor={tipOption.id}>{tipOption.label}</label>
                             <input id={tipOption.id}
-                             type="radio"
-                             name="tip"
-                             value={tipOption.value}
-                             onChange={e=>setTip(+e.target.value)}//Con el signo de + convierte el string a tipo number 
-                             checked={tipOption.value=== tip}
-                             />
+                                type="radio"
+                                name="tip"
+                                value={tipOption.value}
+                                onChange={e => dispatch({ type: 'add-tip', payload: { value: +e.target.value } })}
+                                checked={tipOption.value === tip}
+                            />
                         </div>
                     ))
                 }

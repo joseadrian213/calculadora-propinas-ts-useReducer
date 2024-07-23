@@ -1,15 +1,16 @@
-import { useMemo,useCallback } from "react"
+import { useMemo,useCallback,Dispatch } from "react"
+import { OrderActions } from "../reducers/order-reducer"
 import { OrderItem } from "../types"
 import { formatCurrency } from "../helpers"
 type OrderTotalsProps = {
     order: OrderItem[],
     tip:number,
-    placeOrder: () => void
+    dispatch: Dispatch<OrderActions>
 }
-export default function OrderTotals({ order,tip,placeOrder }: OrderTotalsProps) {
+export default function OrderTotals({ order,tip,dispatch }: OrderTotalsProps) {
     //Solo se ejecuta cuando la dependencia cambia por eso usa useMemo
     const subtotalAmount = useMemo(() => order.reduce((total, item) => total + (item.quantity * item.price), 0), [order])
-    const tipAmount=useMemo(()=>subtotalAmount*tip ,[tip,order])
+    const tipAmount=useMemo(()=>subtotalAmount*  tip ,[tip,order])
     //sintaxis para poder utilizar useCallback cuando se manada a llamar es igual que en una función 
     const totalAmount=useCallback(()=>subtotalAmount+tipAmount,[tip,order])
     return (
@@ -29,7 +30,7 @@ export default function OrderTotals({ order,tip,placeOrder }: OrderTotalsProps) 
             <button
             className="w-full p-3 mt-10 font-bold bg-black uppercase text-white disabled:opacity-10"
             disabled={totalAmount()===0}
-            onClick={()=> placeOrder()}
+            onClick={()=> dispatch({type:'place-order'})}
            >
                 Guardar Orden 
             </button>
